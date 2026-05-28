@@ -1,1 +1,8 @@
-<p>button works!</p>
+<button [class]="buttonClasses()" [disabled]="disabled() || loading()" (click)="handleClick()">
+  @if (loading()) {
+    <span
+      class="animate-spin inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full mr-2"
+    ></span>
+  }
+  {{ label() }}
+</button>
