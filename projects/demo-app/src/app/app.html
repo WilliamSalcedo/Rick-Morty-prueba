@@ -1,38 +1,26 @@
-<div class="p-8 bg-gray-900 min-h-screen flex flex-col gap-4">
-  <ui-button label="Hola" variant="primary" size="lg" />
-  <ui-button label="mundo" variant="secondary" />
-  <ui-button label="Peligroso" variant="danger" />
-  <ui-button label="Cargando" variant="primary" [loading]="true" />
-  <ui-button label="Deshabilitado" variant="primary" [disabled]="true" />
-
-  <ui-card title="Personaje" subtitle="Humano · Vivo" elevation="raised">
-    <p class="text-gray-300 text-sm">Origen: Tierra C-137</p>
-    <ui-button label="Deshabilitado" variant="primary" [disabled]="true" />
-  </ui-card>
-
-  <ui-card title="Episodio" elevation="outlined" subtitle="Hola mundo">
-    <p class="text-gray-300 text-sm">Código: S01E01</p>
-    <p class="text-gray-300 text-sm">Fecha: Mayo 28</p>
-  </ui-card>
-
-  <ui-card title="Ubicación" elevation="flat">
-    <p class="text-gray-300 text-sm">Tipo: Planet</p>
-    <p class="text-gray-300 text-sm">Dimensión: C-137</p>
-  </ui-card>
+<div class="min-h-screen bg-gray-950 p-8">
 
   <div class="flex gap-4 mb-6">
-  <ui-select
-    label="Resource"
-    placeholder="Select a resource"
-    [options]="resourceOptions"
-    [loading]="true"
-  />
-  <ui-select
-    label="Status Filter"
-    placeholder="Select a status"
-    [options]="statusOptions"
-  />
-</div>
+    <ui-select
+      label="Resource"
+      placeholder="Select a resource"
+      [options]="statusOptions"
+    />
+    <ui-select
+      label="Status Filter"
+      placeholder="Select a status"
+      [options]="statusOptions"
+      [loading]="resourceService.loading()"
+      (selectionChange)="onStatusChange($event.value)"
+    />
+  </div>
 
-  <ui-table [columns]="columns" [rows]="rows" emptyMessage="No results found in this dimension"/>
+  <ui-table
+    [columns]="columns"
+    [rows]="resourceService.rows()"
+    [loading]="resourceService.loading()"
+    [errorMessage]="resourceService.error()"
+    emptyMessage="No results found in this dimension"
+  />
+
 </div>
