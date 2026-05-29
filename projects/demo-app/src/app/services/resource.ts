@@ -18,6 +18,9 @@ interface ApiResponse<T> {
 export class ResourceService {
   private readonly baseUrl = 'https://rickandmortyapi.com/api';
 
+  //dejo este link para pruebas de la pantalla de error
+  // private readonly baseUrl = 'https://rickandmortyapi-wrong.com/api';
+
   private readonly _resource = signal<ResourceType>('character');
   private readonly _status = signal<StatusFilter>('');
   private readonly _loading = signal<boolean>(false);

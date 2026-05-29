@@ -2,7 +2,7 @@
   <app-header />
 
   <div class="p-8">
-    <div class="flex gap-4 mb-6">
+    <div class="flex flex-col md:flex-row gap-6 mb-8">
       <ui-select
         label="Resource"
         placeholder="Select a resource"
@@ -14,6 +14,7 @@
         placeholder="Select a status"
         [options]="statusOptions"
         [loading]="resourceService.loading()"
+        [disabled]="resourceService.resource() !== 'character'"
         (selectionChange)="onStatusChange($event.value)"
       />
     </div>
@@ -23,7 +24,16 @@
       [rows]="rows"
       [loading]="resourceService.loading()"
       [errorMessage]="resourceService.error()"
+      [showImage]="resourceService.resource() === 'character'"
+      [statusKey]="resourceService.resource() === 'character' ? 'status' : null"
       emptyMessage="No results found in this dimension"
+      (actionTriggered)="onViewAction($event.row)"
     />
   </div>
+
+  <app-detail-modal
+    [row]="selectedRow"
+    [resourceType]="resourceService.resource()"
+    (closed)="onCloseModal()"
+  />
 </div>

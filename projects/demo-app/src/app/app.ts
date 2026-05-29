@@ -4,16 +4,19 @@ import type { TableColumn, SelectOption } from 'ui-lib';
 import { ResourceService } from './services/resource';
 import type { StatusFilter, ResourceType, ResourceRow } from './services/resource';
 import { HeaderComponent } from './components/header/header';
+import { DetailModalComponent } from './components/detail-modal/detail-modal';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [TableComponent, SelectComponent, HeaderComponent],
+  imports: [TableComponent, SelectComponent, HeaderComponent, DetailModalComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App implements OnInit {
   constructor(protected readonly resourceService: ResourceService) {}
+
+  selectedRow: ResourceRow | null = null;
 
   ngOnInit(): void {
     this.resourceService.fetchCharacters();
@@ -30,13 +33,13 @@ export class App implements OnInit {
       ];
     }
 
-      if (resource === 'location') {
-        return [
-          { key: 'name', header: 'Name' },
-          { key: 'type', header: 'Type' },
-          { key: 'dimension', header: 'Dimension' },
-        ];
-      }
+    if (resource === 'location') {
+      return [
+        { key: 'name', header: 'Name' },
+        { key: 'type', header: 'Type' },
+        { key: 'dimension', header: 'Dimension' },
+      ];
+    }
 
     return [
       { key: 'name', header: 'Name' },
@@ -69,5 +72,13 @@ export class App implements OnInit {
 
   get rows(): ResourceRow[] {
     return this.resourceService.rows();
+  }
+
+  onViewAction(row: ResourceRow): void {
+    this.selectedRow = row;
+  }
+
+  onCloseModal(): void {
+    this.selectedRow = null;
   }
 }
