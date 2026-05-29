@@ -2,10 +2,11 @@ import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Character } from '../models/character';
 import { Episode } from '../models/episode';
+import { Location } from '../models/location';
 
 export type ResourceType = 'character' | 'episode' | 'location';
 export type StatusFilter = 'alive' | 'dead' | 'unknown' | '';
-export type ResourceRow = Character | Episode;
+export type ResourceRow = Character | Episode | Location;
 
 interface ApiResponse<T> {
   results: T[];
@@ -23,6 +24,7 @@ export class ResourceService {
   private readonly _error = signal<string | null>(null);
   private readonly _characters = signal<Character[]>([]);
   private readonly _episodes = signal<Episode[]>([]);
+  private readonly _locations = signal<Location[]>([]);
 
   readonly resource = this._resource.asReadonly();
   readonly status = this._status.asReadonly();
@@ -30,6 +32,7 @@ export class ResourceService {
   readonly error = this._error.asReadonly();
   readonly rows = computed<ResourceRow[]>(() => {
     if (this._resource() === 'episode') return this._episodes();
+    if (this._resource() === 'location') return this._locations();
     return this._characters();
   });
   constructor(private readonly http: HttpClient) {}
@@ -55,18 +58,6 @@ export class ResourceService {
     });
   }
 
-  setStatus(status: StatusFilter): void {
-    this._status.set(status);
-    this.fetchCharacters();
-  }
-
-  setResource(resource: ResourceType): void {
-    this._resource.set(resource);
-    this._status.set('');
-    if (resource === 'character') this.fetchCharacters();
-    else if (resource === 'episode') this.fetchEpisodes();
-  }
-
   fetchEpisodes(): void {
     this._loading.set(true);
     this._error.set(null);
@@ -83,5 +74,36 @@ export class ResourceService {
         this._loading.set(false);
       },
     });
+  }
+
+  fetchLocations(): void {
+    this._loading.set(true);
+    this._error.set(null);
+
+    const url = `${this.baseUrl}/location`;
+
+    this.http.get<ApiResponse<Location>>(url).subscribe({
+      next: (response) => {
+        this._locations.set(response.results);
+        this._loading.set(false);
+      },
+      error: () => {
+        this._error.set('Could not connect to the dimension. Try again.');
+        this._loading.set(false);
+      },
+    });
+  }
+
+  setStatus(status: StatusFilter): void {
+    this._status.set(status);
+    this.fetchCharacters();
+  }
+
+  setResource(resource: ResourceType): void {
+    this._resource.set(resource);
+    this._status.set('');
+    if (resource === 'character') this.fetchCharacters();
+    else if (resource === 'episode') this.fetchEpisodes();
+    else this.fetchLocations();
   }
 }

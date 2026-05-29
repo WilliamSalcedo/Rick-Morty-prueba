@@ -30,6 +30,14 @@ export class App implements OnInit {
       ];
     }
 
+      if (resource === 'location') {
+        return [
+          { key: 'name', header: 'Name' },
+          { key: 'type', header: 'Type' },
+          { key: 'dimension', header: 'Dimension' },
+        ];
+      }
+
     return [
       { key: 'name', header: 'Name' },
       { key: 'species', header: 'Species' },
