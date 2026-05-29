@@ -2,11 +2,12 @@ import { Component, ChangeDetectionStrategy, input, output } from '@angular/core
 import { CommonModule } from '@angular/common';
 import { CardComponent } from 'ui-lib';
 import type { ResourceType, ResourceRow } from '../../services/resource';
+import { LucideAngularModule, X } from 'lucide-angular';
 
 @Component({
   selector: 'app-detail-modal',
   standalone: true,
-  imports: [CommonModule, CardComponent],
+  imports: [CommonModule, CardComponent, LucideAngularModule],
   templateUrl: './detail-modal.html',
   styleUrl: './detail-modal.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,6 +17,7 @@ export class DetailModalComponent {
   resourceType = input<ResourceType>('character');
 
   closed = output<void>();
+  readonly xIcon = X;
 
   onClose(): void {
     this.closed.emit();
