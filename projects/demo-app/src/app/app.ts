@@ -3,11 +3,13 @@ import { TableComponent, SelectComponent } from 'ui-lib';
 import type { TableColumn, SelectOption } from 'ui-lib';
 import { ResourceService } from './services/resource';
 import type { StatusFilter } from './services/resource';
+import { HeaderComponent } from './components/header/header';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [TableComponent, SelectComponent],
+  imports: [TableComponent, SelectComponent, HeaderComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
