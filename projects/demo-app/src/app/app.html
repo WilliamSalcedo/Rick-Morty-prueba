@@ -14,6 +14,7 @@
         placeholder="Select a status"
         [options]="statusOptions"
         [loading]="resourceService.loading()"
+        [disabled]="resourceService.resource() !== 'character'"
         (selectionChange)="onStatusChange($event.value)"
       />
     </div>
