@@ -25,6 +25,13 @@
       [loading]="resourceService.loading()"
       [errorMessage]="resourceService.error()"
       emptyMessage="No results found in this dimension"
+      (actionTriggered)="onViewAction($event.row)"
     />
   </div>
+
+  <app-detail-modal
+    [row]="selectedRow"
+    [resourceType]="resourceService.resource()"
+    (closed)="onCloseModal()"
+  />
 </div>
