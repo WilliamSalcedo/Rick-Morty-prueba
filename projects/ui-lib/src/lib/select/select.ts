@@ -13,6 +13,9 @@ export interface SelectOption {
   templateUrl: './select.html',
   styleUrl: './select.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'w-full'
+  }
 })
 export class SelectComponent {
   options = input<SelectOption[]>([]);
