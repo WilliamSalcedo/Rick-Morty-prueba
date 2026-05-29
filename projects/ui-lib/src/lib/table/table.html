@@ -53,7 +53,7 @@
           <tr class="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
             @for (col of columns(); track col.key) {
               <td class="px-4 py-3 text-sm text-gray-300">
-                {{ row[col.key] }}
+                {{ getNestedValue(row, col.key) }}
               </td>
             }
             <td class="px-4 py-3">

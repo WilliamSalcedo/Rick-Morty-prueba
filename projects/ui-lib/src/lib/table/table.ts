@@ -11,7 +11,6 @@ export interface TableAction<T> {
   row: T;
 }
 
-
 @Component({
   selector: 'ui-table',
   standalone: true,
@@ -35,5 +34,14 @@ export class TableComponent<T extends Record<string, unknown>> {
 
   skeletonRows(): number[] {
     return new Array(5).fill(0).map((_: unknown, i: number) => i);
+  }
+
+  getNestedValue(row: T, key: string): unknown {
+    return key.split('.').reduce((obj: unknown, keyPart: string) => {
+      if (obj && typeof obj === 'object') {
+        return (obj as Record<string, unknown>)[keyPart];
+      }
+      return null;
+    }, row);
   }
 }
