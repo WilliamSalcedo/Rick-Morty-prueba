@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { LucideAngularModule, Eye, Trash2, TriangleAlert, SearchX } from 'lucide-angular';
 
 export interface TableColumn {
   key: string;
@@ -14,17 +15,24 @@ export interface TableAction<T> {
 @Component({
   selector: 'ui-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './table.html',
   styleUrl: './table.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent<T extends Record<string, unknown>> {
+  readonly eyeIcon = Eye;
+  readonly trashIcon = Trash2;
+  readonly alertIcon = TriangleAlert;
+  readonly searchXIcon = SearchX;
   columns = input<TableColumn[]>([]);
   rows = input<T[]>([]);
   loading = input<boolean>(false);
   emptyMessage = input<string>('No hay resultados');
   errorMessage = input<string | null>(null);
+  showImage = input<boolean>(false);
+  imageSource = input<string>('image');
+  statusKey = input<string | null>(null);
 
   actionTriggered = output<TableAction<T>>();
 

@@ -24,6 +24,8 @@
       [rows]="rows"
       [loading]="resourceService.loading()"
       [errorMessage]="resourceService.error()"
+      [showImage]="resourceService.resource() === 'character'"
+      [statusKey]="resourceService.resource() === 'character' ? 'status' : null"
       emptyMessage="No results found in this dimension"
       (actionTriggered)="onViewAction($event.row)"
     />
