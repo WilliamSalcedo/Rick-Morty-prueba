@@ -1,1 +1,29 @@
-<h1 class="text-3xl font-bold text-green-400">Rick & Morty Explorer</h1>
+<div class="min-h-screen bg-gray-950">
+  <app-header />
+
+  <div class="p-8">
+    <div class="flex gap-4 mb-6">
+      <ui-select
+        label="Resource"
+        placeholder="Select a resource"
+        [options]="resourceOptions"
+        (selectionChange)="onResourceChange($event.value)"
+      />
+      <ui-select
+        label="Status Filter"
+        placeholder="Select a status"
+        [options]="statusOptions"
+        [loading]="resourceService.loading()"
+        (selectionChange)="onStatusChange($event.value)"
+      />
+    </div>
+
+    <ui-table
+      [columns]="columns"
+      [rows]="rows"
+      [loading]="resourceService.loading()"
+      [errorMessage]="resourceService.error()"
+      emptyMessage="No results found in this dimension"
+    />
+  </div>
+</div>

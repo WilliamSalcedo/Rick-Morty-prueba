@@ -1,1 +1,15 @@
-<p>card works!</p>
+<div [class]="cardClasses()">
+  <button
+    class="w-full text-left px-4 py-3 border-b border-gray-800 cursor-pointer hover:bg-gray-800/50 transition-colors"
+    (click)="onHeaderClick()"
+  >
+    <h3 class="text-white font-medium text-sm">{{ title() }}</h3>
+    @if (subtitle()) {
+      <p class="text-gray-400 text-xs mt-1">{{ subtitle() }}</p>
+    }
+  </button>
+
+  <div class="p-4">
+    <ng-content />
+  </div>
+</div>
