@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { TableComponent, SelectComponent } from 'ui-lib';
 import type { TableColumn, SelectOption } from 'ui-lib';
 import { ResourceService } from './services/resource';
-import type { StatusFilter } from './services/resource';
+import type { StatusFilter, ResourceType, ResourceRow } from './services/resource';
 import { HeaderComponent } from './components/header/header';
-
 
 @Component({
   selector: 'app-root',
@@ -20,13 +19,25 @@ export class App implements OnInit {
     this.resourceService.fetchCharacters();
   }
 
-  columns: TableColumn[] = [
-    { key: 'name', header: 'Name' },
-    { key: 'species', header: 'Species' },
-    { key: 'status', header: 'Status' },
-    { key: 'origin.name', header: 'Origin' },
-    { key: 'location.name', header: 'Location' },
-  ];
+  get columns(): TableColumn[] {
+    const resource = this.resourceService.resource();
+
+    if (resource === 'episode') {
+      return [
+        { key: 'name', header: 'Name' },
+        { key: 'episode', header: 'Code' },
+        { key: 'air_date', header: 'Air Date' },
+      ];
+    }
+
+    return [
+      { key: 'name', header: 'Name' },
+      { key: 'species', header: 'Species' },
+      { key: 'status', header: 'Status' },
+      { key: 'origin.name', header: 'Origin' },
+      { key: 'location.name', header: 'Location' },
+    ];
+  }
 
   statusOptions: SelectOption[] = [
     { label: 'Alive', value: 'alive' },
@@ -34,7 +45,21 @@ export class App implements OnInit {
     { label: 'Unknown', value: 'unknown' },
   ];
 
+  resourceOptions: SelectOption[] = [
+    { label: 'Characters', value: 'character' },
+    { label: 'Episodes', value: 'episode' },
+    { label: 'Locations', value: 'location' },
+  ];
+
   onStatusChange(status: string): void {
     this.resourceService.setStatus(status as StatusFilter);
+  }
+
+  onResourceChange(resource: string): void {
+    this.resourceService.setResource(resource as ResourceType);
+  }
+
+  get rows(): ResourceRow[] {
+    return this.resourceService.rows();
   }
 }

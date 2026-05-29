@@ -6,7 +6,8 @@
       <ui-select
         label="Resource"
         placeholder="Select a resource"
-        [options]="statusOptions"
+        [options]="resourceOptions"
+        (selectionChange)="onResourceChange($event.value)"
       />
       <ui-select
         label="Status Filter"
@@ -19,7 +20,7 @@
 
     <ui-table
       [columns]="columns"
-      [rows]="resourceService.rows()"
+      [rows]="rows"
       [loading]="resourceService.loading()"
       [errorMessage]="resourceService.error()"
       emptyMessage="No results found in this dimension"
