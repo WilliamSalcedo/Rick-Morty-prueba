@@ -7,11 +7,7 @@
         <lucide-icon [img]="alertIcon" size="16" class="text-red-400" />
         <span class="text-red-400 text-sm font-mono">{{ errorMessage() }}</span>
       </div>
-      <button
-        class="text-red-400 text-xs font-mono border border-red-500/30 px-3 py-1.5 rounded-lg hover:bg-red-500/10 transition-colors"
-      >
-        Retry
-      </button>
+      <ui-button label="Retry" variant="danger" size="sm" (clicked)="onRetry()" />
     </div>
   }
 
