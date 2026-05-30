@@ -1,5 +1,5 @@
 [build]
-  command = "ng build demo-app --configuration production"
+  command = "ng build ui-lib --configuration production && ng build demo-app --configuration production"
   publish = "dist/demo-app/browser"
 
 [build.environment]
