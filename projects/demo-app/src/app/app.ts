@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { TableComponent, SelectComponent } from 'ui-lib';
 import type { TableColumn, SelectOption } from 'ui-lib';
 import { ResourceService } from './services/resource';
@@ -17,6 +17,7 @@ export class App implements OnInit {
   constructor(protected readonly resourceService: ResourceService) {}
 
   selectedRow: ResourceRow | null = null;
+  statusValue = signal<string | null>(null);
 
   ngOnInit(): void {
     this.resourceService.fetchCharacters();
@@ -67,6 +68,7 @@ export class App implements OnInit {
   }
 
   onResourceChange(resource: string): void {
+    this.statusValue.set(null);
     this.resourceService.setResource(resource as ResourceType);
   }
 
@@ -74,11 +76,19 @@ export class App implements OnInit {
     return this.resourceService.rows();
   }
 
-  onViewAction(row: ResourceRow): void {
-    this.selectedRow = row;
+  onViewAction(event: { action: 'view' | 'delete'; row: ResourceRow }): void {
+    if (event.action === 'view') {
+      this.selectedRow = event.row;
+    } else {
+      console.log('Delete action triggered:', event.row);
+    }
   }
 
   onCloseModal(): void {
     this.selectedRow = null;
+  }
+
+  onRetry(): void {
+    this.resourceService.setResource(this.resourceService.resource());
   }
 }
