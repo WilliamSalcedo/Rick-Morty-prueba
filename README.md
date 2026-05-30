@@ -1,59 +1,188 @@
-# RickAndMorty
+# Rick & Morty Explorer
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.13.
+Angular workspace con una librería de componentes reutilizable (`ui-lib`) y una aplicación demo (`demo-app`) que consume la [Rick and Morty API](https://rickandmortyapi.com/).
 
-## Development server
+---
 
-To start a local development server, run:
+## Arquitectura
 
-```bash
-ng serve
+```
+rick-and-morty/
+├── projects/
+│   ├── ui-lib/          ← Librería de componentes reutilizables
+│   │   └── src/
+│   │       ├── public-api.ts
+│   │       └── lib/
+│   │           ├── button/
+│   │           ├── card/
+│   │           ├── select/
+│   │           └── table/
+│   └── demo-app/        ← App que consume la librería
+│       └── src/
+│           └── app/
+│               ├── components/
+│               ├── models/
+│               └── services/
+├── angular.json
+├── package.json
+└── tsconfig.json
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Instalación y ejecución
 
 ```bash
-ng generate component component-name
+# Instalar dependencias
+npm install
+
+# Compilar la librería (requerido antes de servir la app)
+ng build ui-lib
+
+# Servir la demo app
+ng serve demo-app
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Abrir el navegador en `http://localhost:4200`
 
-```bash
-ng generate --help
+---
+
+## API de componentes
+
+### `ui-button`
+
+```html
+<ui-button
+  label="Click me"
+  variant="primary"
+  size="md"
+  [disabled]="false"
+  [loading]="false"
+  (clicked)="onClicked()"
+/>
 ```
 
-## Building
+| Input | Tipo | Default | Descripción |
+|-------|------|---------|-------------|
+| `label` | `string` | `''` | Texto visible del botón |
+| `variant` | `'primary' \| 'secondary' \| 'danger'` | `'primary'` | Estilo visual |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Tamaño del botón |
+| `disabled` | `boolean` | `false` | Bloquea la interacción |
+| `loading` | `boolean` | `false` | Muestra spinner y bloquea el click |
 
-To build the project run:
+| Output | Tipo | Descripción |
+|--------|------|-------------|
+| `clicked` | `void` | Emite solo si no está disabled ni loading |
 
-```bash
-ng build
+---
+
+### `ui-card`
+
+```html
+<ui-card
+  title="Personaje"
+  subtitle="Humano · Vivo"
+  elevation="raised"
+  (headerClicked)="onHeaderClick()"
+>
+  <p>Contenido proyectado aquí</p>
+</ui-card>
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+| Input | Tipo | Default | Descripción |
+|-------|------|---------|-------------|
+| `title` | `string` | `''` | Título del header |
+| `subtitle` | `string \| null` | `null` | Subtítulo opcional |
+| `elevation` | `'flat' \| 'raised' \| 'outlined'` | `'flat'` | Estilo visual del contenedor |
 
-## Running unit tests
+| Output | Tipo | Descripción |
+|--------|------|-------------|
+| `headerClicked` | `void` | Emite al hacer clic en el header |
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+---
 
-```bash
-ng test
+### `ui-select`
+
+```html
+<ui-select
+  label="Resource"
+  placeholder="Select a resource"
+  [options]="options"
+  [loading]="false"
+  [disabled]="false"
+  [(value)]="selectedValue"
+  (selectionChange)="onChange($event)"
+/>
 ```
 
-## Running end-to-end tests
+| Input | Tipo | Default | Descripción |
+|-------|------|---------|-------------|
+| `options` | `SelectOption[]` | `[]` | Lista de opciones `{ label, value }` |
+| `label` | `string` | `''` | Etiqueta visible sobre el select |
+| `placeholder` | `string` | `'Select an option'` | Texto cuando no hay selección |
+| `loading` | `boolean` | `false` | Muestra skeleton |
+| `disabled` | `boolean` | `false` | Bloquea la interacción |
 
-For end-to-end (e2e) testing, run:
+| Model | Tipo | Descripción |
+|-------|------|-------------|
+| `value` | `string \| null` | Two-way binding del valor seleccionado |
 
-```bash
-ng e2e
+| Output | Tipo | Descripción |
+|--------|------|-------------|
+| `selectionChange` | `SelectOption` | Emite el objeto completo al cambiar |
+
+---
+
+### `ui-table`
+
+```html
+<ui-table
+  [columns]="columns"
+  [rows]="rows"
+  [loading]="false"
+  [showImage]="true"
+  [statusKey]="'status'"
+  emptyMessage="No results found"
+  [errorMessage]="null"
+  (actionTriggered)="onAction($event)"
+/>
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+| Input | Tipo | Default | Descripción |
+|-------|------|---------|-------------|
+| `columns` | `TableColumn[]` | `[]` | Definición de columnas `{ key, header }` |
+| `rows` | `T[]` | `[]` | Datos a renderizar |
+| `loading` | `boolean` | `false` | Muestra skeleton rows |
+| `emptyMessage` | `string` | `'No hay resultados'` | Mensaje cuando rows está vacío |
+| `errorMessage` | `string \| null` | `null` | Mensaje de error visible |
+| `showImage` | `boolean` | `false` | Muestra columna de foto circular |
+| `imageSource` | `string` | `'image'` | Key del campo de imagen en el row |
+| `statusKey` | `string \| null` | `null` | Key del campo de status para mostrar badge |
 
-## Additional Resources
+| Output | Tipo | Descripción |
+|--------|------|-------------|
+| `actionTriggered` | `TableAction<T>` | Emite `{ action: 'view' \| 'delete', row: T }` |
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+
+## Decisiones de diseño
+
+**Signals API sobre decoradores** — Se usó `input()`, `output()` y `model()` de Angular 17+ en todos los componentes de la librería, evitando los decoradores `@Input()` y `@Output()` como lo exige la prueba.
+
+**Tabla genérica** — `ui-table` usa un tipo genérico `T extends Record<string, unknown>` para no conocer el dominio de los datos. Solo renderiza columnas y emite acciones.
+
+**Estado centralizado en servicio** — Todo el estado de la app (recurso activo, filtro, loading, error, resultados) vive en `ResourceService` usando signals. Los componentes no hacen llamadas HTTP directas.
+
+**Filtro de status deshabilitado** — Episodes y Locations no tienen campo `status` en la API, por lo que el select de filtro se deshabilita automáticamente cuando el recurso activo no es Characters.
+
+**Foto como columna especial** — La tabla recibe `showImage` y `imageSource` como inputs en lugar de incluir la imagen como columna normal, para mantener la tabla genérica y no acoplarla al dominio.
+
+---
+
+## Tecnologías
+
+- Angular 21
+- TypeScript (strict mode)
+- Tailwind CSS v3
+- Lucide Angular (iconos)
+- Rick and Morty API
