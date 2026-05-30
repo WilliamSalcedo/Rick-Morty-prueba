@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, Eye, Trash2, TriangleAlert, SearchX } from 'lucide-angular';
+import { ButtonComponent } from '../button/button';
 
 export interface TableColumn {
   key: string;
@@ -15,7 +16,7 @@ export interface TableAction<T> {
 @Component({
   selector: 'ui-table',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, ButtonComponent],
   templateUrl: './table.html',
   styleUrl: './table.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +36,7 @@ export class TableComponent<T extends Record<string, unknown>> {
   statusKey = input<string | null>(null);
 
   actionTriggered = output<TableAction<T>>();
+  retry = output<void>();
 
   onAction(action: 'view' | 'delete', row: T): void {
     this.actionTriggered.emit({ action, row });
@@ -51,5 +53,9 @@ export class TableComponent<T extends Record<string, unknown>> {
       }
       return null;
     }, row);
+  }
+
+  onRetry(): void {
+    this.retry.emit();
   }
 }
